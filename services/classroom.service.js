@@ -111,6 +111,14 @@ function patchClassroom(classroom, newClassroom) {
   return classroom.$query().patchAndFetch(newClassroom);
 }
 
+/**
+ *
+ * @param {Classroom} classroom
+ */
+function getClassroomSetting(classroom) {
+  return classroom.$relatedQuery("setting");
+}
+
 module.exports = {
   getAllClassrooms,
   getClassroom,
@@ -124,5 +132,7 @@ module.exports = {
   joinClassroom,
   leaveClassroom,
   getClassroomOwner,
-  getClassroomJoined
+  getClassroomJoined,
+  getClassroomSetting,
+
 }

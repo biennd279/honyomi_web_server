@@ -1,6 +1,7 @@
 const {Model} = require("objection");
 const knex = require("../databases/knex");
 const User = require("./User");
+const Setting = require("./Setting");
 
 Model.knex(knex);
 
@@ -50,6 +51,15 @@ class Classroom extends Model {
           to: "m_student_classroom.student_id"
         },
         to: "user.id"
+      }
+    },
+
+    setting: {
+      relation: Model.HasOneRelation,
+      modelClass: Setting,
+      join: {
+        from: "classroom.id",
+        to: "setting.classroom_id"
       }
     },
   }

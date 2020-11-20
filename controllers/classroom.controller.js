@@ -146,6 +146,19 @@ const leaveClassroom = async (req, res, next) => {
   }
 }
 
+const getSetting = async (req, res, next) => {
+  try {
+    const {classroom} = req;
+    const response = await classroomService.getClassroomSetting(classroom);
+    if (response) {
+      return responseUtil.success(res, 200, response);
+    }
+    return responseUtil.error(res, 404, "Can find classroom setting");
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getClassrooms,
   postClassroom,
@@ -158,5 +171,5 @@ module.exports = {
   getStudents,
   joinClassroom,
   leaveClassroom,
-
+  getSetting
 }

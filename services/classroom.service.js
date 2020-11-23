@@ -7,7 +7,7 @@ const User = require("../models/User");
  * @param query
  */
 function getClassroomOwner(user, query) {
-  return user.$relatedQuery("classroom_owner").where(query);
+  return user.$relatedQuery("classroom_owner").where(query).modify("withoutSetting");
 }
 
 /**
@@ -32,6 +32,10 @@ function getClassroom(classroomId) {
       .findById(classroomId);
 }
 
+function getClassroomViaCode(classroomCode) {
+  return Classroom.query().where("code", classroomCode).first();
+}
+
 /**
  *
  * @param {Classroom} classroom
@@ -45,7 +49,15 @@ function getOwners(classroom) {
  * @param {Classroom}classroom
  */
 function getStudents(classroom) {
-  return classroom.$relatedQuery("students").where('status', 'Accepted');
+  return classroom.$relatedQuery("students");
+}
+
+/**
+ * Get ALL MEMBERS of a classroom, including pending and declined members.
+ * @param {Classroom} classroom
+ */
+function getAllMembers(classroom) {
+  return classroom.$relatedQuery("all_members");
 }
 
 /**
@@ -124,6 +136,7 @@ function getClassroomSetting(classroom) {
 module.exports = {
   getAllClassrooms,
   getClassroom,
+  getClassroomViaCode,
   createClassroom,
   addOwnerClassroom,
   deleteClassroom,
@@ -135,5 +148,5 @@ module.exports = {
   leaveClassroom,
   getClassroomOwner,
   getClassroomJoined,
-  getClassroomSetting
-}
+  getAllMembers,
+};

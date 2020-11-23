@@ -1,8 +1,37 @@
 const responseUtil = require("../utils/responseUtils");
 const classroomService = require("../services/classroom.service");
 
+
+/**
+ * With url {{base_url}}/api/classroom/:classroomId
+ * Middleware identify classroom with classroomId, if not match
+ * return next with 404 status code
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<*>}
+ */
+const middleware = async (req, res, next) => {
+  try {
+    const classroomId = parseInt(req.params.classroomId);
+    const classroom = await classroomService.getClassroom(classroomId);
+
+    if (classroom) {
+      req.classroom = classroom;
+      req.classroomId = classroomId;
+      return next();
+    }
+    return responseUtil.error(res, 404);
+  } catch (err) {
+    next(err);
+  }
+}
+
 const getClassrooms = async (req, res, next) => {
   try {
+    /* any thing in classroom's attribute
+    * Example: id=1, owner=1
+    * */
     let query = req.query;
     let user = req.user;
     const classroomsOwner = await classroomService.getClassroomOwner(user, query);
@@ -28,22 +57,6 @@ const postClassroom = async (req, res, next) => {
     });
     await classroomService.addOwnerClassroom(classroom, user);
     return responseUtil.success(res, 201, classroom);
-  } catch (err) {
-    next(err);
-  }
-}
-
-const middleware = async (req, res, next) => {
-  try {
-    const classroomId = parseInt(req.params.classroomId);
-    const classroom = await classroomService.getClassroom(classroomId);
-
-    if (classroom) {
-      req.classroom = classroom;
-      req.classroomId = classroomId;
-      return next();
-    }
-    return responseUtil.error(res, 404);
   } catch (err) {
     next(err);
   }

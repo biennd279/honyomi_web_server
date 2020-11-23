@@ -72,7 +72,7 @@ function leaveClassroom(user, classroom) {
  * Create new classroom
  * @param {Classroom} classroom
  */
-function createClassroom(classroom) {
+async function createClassroom(classroom) {
   return Classroom.query().insert(classroom);
 }
 
@@ -115,8 +115,10 @@ function patchClassroom(classroom, newClassroom) {
  *
  * @param {Classroom} classroom
  */
+
+
 function getClassroomSetting(classroom) {
-  return classroom.$relatedQuery("setting");
+  return classroom;
 }
 
 module.exports = {
@@ -133,6 +135,5 @@ module.exports = {
   leaveClassroom,
   getClassroomOwner,
   getClassroomJoined,
-  getClassroomSetting,
-
+  getClassroomSetting
 }

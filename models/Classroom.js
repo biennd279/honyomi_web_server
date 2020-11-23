@@ -17,7 +17,7 @@ class Classroom extends Model {
 
   setting() {
     return {
-      require_approval_to_approve: this.require_approval_to_approve,
+      require_approval: this.require_approval,
       participant_messaging: this.participant_messaging,
       message_with_children: this.message_with_children
     }
@@ -57,7 +57,7 @@ class Classroom extends Model {
         setting: {
           type: "object",
           properties: {
-            require_approval_to_approve: {type: "boolean"},
+            require_approval: {type: "boolean"},
             participant_messaging: {
               type: "string",
               enum: ["on", "off", "role-based"]

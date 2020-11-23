@@ -85,7 +85,7 @@ function leaveClassroom(user, classroom) {
  * @param {Classroom} classroom
  */
 async function createClassroom(classroom) {
-  return Classroom.query().insert(classroom);
+  return Classroom.query().insertAndFetch(classroom);
 }
 
 /**
@@ -121,16 +121,6 @@ function updateClassroom(classroom, newClassroom) {
  */
 function patchClassroom(classroom, newClassroom) {
   return classroom.$query().patchAndFetch(newClassroom);
-}
-
-/**
- *
- * @param {Classroom} classroom
- */
-
-
-function getClassroomSetting(classroom) {
-  return classroom;
 }
 
 module.exports = {

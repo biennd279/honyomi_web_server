@@ -192,6 +192,23 @@ const getAllMembers = async (req, res, next) => {
   }
 };
 
+const patchSetting = async (req, res, next) => {
+  try {
+    const classroom = req.classroom;
+    const settingData = req.body;
+    if (settingData) {
+      delete settingData.id;
+    }
+    const newClassroom = await classroomService.patchClassroom(
+        classroom,
+        settingData
+    );
+    return responseUtil.success(res, 202, newClassroom);
+  } catch (err) {
+    next(err);
+  }
+}
+
 function generateCode(length) {
   var result = "";
   var characters =
@@ -203,18 +220,6 @@ function generateCode(length) {
   return result;
 }
 
-const getSetting = async (req, res, next) => {
-  try {
-    const {classroom} = req;
-    const response = await classroomService.getClassroomSetting(classroom);
-    if (response) {
-      return responseUtil.success(res, 200, response);
-    }
-    return responseUtil.error(res, 404, "Can find classroom setting");
-  } catch (err) {
-    next(err);
-  }
-}
 
 module.exports = {
   getClassrooms,
@@ -230,4 +235,5 @@ module.exports = {
   leaveClassroom,
   joinClassroomViaCode,
   getAllMembers,
+  patchSetting
 };

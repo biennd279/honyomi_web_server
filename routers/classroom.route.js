@@ -25,4 +25,6 @@ router.post("/:classroomId/students/join", classroomController.joinClassroom)
 
 router.post("/:classroomId/students/leave", classroomController.leaveClassroom)
 
+router.get("/:classroomId/setting", classroomController.getSetting);
+
 module.exports = router;

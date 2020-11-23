@@ -1,16 +1,49 @@
 const {Model} = require("objection");
 const knex = require("../databases/knex");
 const User = require("./User");
+const _ = require("lodash");
 
 Model.knex(knex);
 
 class Classroom extends Model {
+
   static get tableName() {
     return "classroom";
   }
 
-  static modifiers = {
+  static get virtualAttributes() {
+    return ["setting"]
+  }
 
+  setting() {
+    return {
+      require_approval_to_approve: this.require_approval_to_approve,
+      participant_messaging: this.participant_messaging,
+      message_with_children: this.message_with_children
+    }
+  }
+
+  static modifiers = {
+    withoutSetting(builder) {
+      return builder.select(
+          "classroom.id",
+          "classroom.code",
+          "classroom.name",
+          "classroom.school"
+      )
+    },
+
+    setting(builder) {
+      return builder.select(
+          "classroom.id",
+          "classroom.setting",
+      )
+    },
+  }
+
+  $formatJson(json) {
+    let _json = super.$formatJson(json);
+    return _.pick(_json, ["id", "code", "name", "school", "setting"]);
   }
 
   static get jsonSchema() {
@@ -21,6 +54,17 @@ class Classroom extends Model {
         code: {type: "string", maxlength: 6},
         name: {type: "string", maxlength: 200},
         school: {type: "string", maxlength: 200},
+        setting: {
+          type: "object",
+          properties: {
+            require_approval_to_approve: {type: "boolean"},
+            participant_messaging: {
+              type: "string",
+              enum: ["on", "off", "role-based"]
+            },
+            message_with_children: {type: "boolean"}
+          }
+        }
       },
     };
   }
